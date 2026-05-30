@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Playwright Tests
 
 A small Playwright Python test repository scaffold.
@@ -28,6 +27,3 @@ pytest
 
 - Use `pytest` to run the tests
 - Use `python3 -m playwright install` to install browsers
-=======
-
->>>>>>> 8553837e615f556d2e7f4a00d903280f687e6139
