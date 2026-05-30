@@ -1,4 +1,5 @@
 .venv/
+venv/
 .playwright/
 playwright-report/
 test-results/
