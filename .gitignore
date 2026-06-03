@@ -12,4 +12,3 @@ __pycache__/
 coverage/
 allure-results/
 report.html
-assets/style.css
