@@ -13,6 +13,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: test-service/go.mod
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -26,8 +31,34 @@ jobs:
       - name: Install Playwright browsers
         run: python -m playwright install
 
+      - name: Start test service
+        run: |
+          nohup go run ./test-service/main.go > test-service.log 2>&1 &
+
+      - name: Wait for test service
+        run: |
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:8080/health > /dev/null; then
+              echo "Test service is healthy"
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "Test service failed to start"
+          cat test-service.log
+          exit 1
+
       - name: Run tests
+        env:
+          TEST_SERVICE_BASE_URL: http://127.0.0.1:8080
         run: pytest
+
+      - name: Upload test service logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-service-log
+          path: test-service.log
 
       - name: Upload Playwright report as artifact
         if: always()
